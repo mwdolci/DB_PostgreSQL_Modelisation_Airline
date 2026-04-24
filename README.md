@@ -1,4 +1,4 @@
-# README.md — Modélisation d’une base de données PostgreSQL pour une compagnie aérienne
+# Modélisation d’une base de données PostgreSQL pour une compagnie aérienne
 
 ## 📌 Présentation du projet
 
