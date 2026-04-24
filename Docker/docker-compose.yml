@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: cours-bd-masrad
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: etudiant
+      POSTGRES_PASSWORD: etudiant
+      POSTGRES_DB: bd_masrad
+      # Optional but explicit; this is where the data lives inside the container
+      PGDATA: /var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    volumes:
+      # Persistent data volume
+      - pgdata:/var/lib/postgresql/data
+      # Initialization scripts (run only on first startup, when DB is empty)
+      - ./schemas:/docker-entrypoint-initdb.d
+      # Répertoire local où nous mettrons les fichers .sql. Ajustez en fonction de vos besoins.
+      # Windows
+      - C:/Users/pyroo/MAS-RAD/CAS-DAW/DatasBase/cours-bd-MASRAD-docker/BD:/sqlfiles
+
+  pgadmin:
+    image: dpage/pgadmin4:8
+    container_name: pg-course-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: does.not@matter.com
+      PGADMIN_DEFAULT_PASSWORD: admin  
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres
+
+volumes:
+  pgdata:
