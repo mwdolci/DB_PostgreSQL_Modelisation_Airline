@@ -1,91 +1,160 @@
-Pour le premier cours de bases de données du 2 décembre, assurez-vous d'avoir PostgreSQL (https://www.postgresql.org) fonctionnel sur votre ordinateur.
+# README.md — Modélisation d’une base de données PostgreSQL pour une compagnie aérienne
 
-Vous pouvez installer PostgreSQL localement ou utiliser le conteneur Docker préparé pour le cours. Le conteneur sera surtout utile pour Windows, l'installation locale sur des machines macOS / Linux étant beaucoup plus simple.
+## 📌 Présentation du projet
 
-### Conteneur Docker
+Ce projet a été réalisé dans le cadre du cours **Base de Données Avancé (MAS-RAD / CAS-DAW)**.
 
-1. - Sur macOS / Linux : installer Docker Desktop. **Normalement déjà fait pour vos autres cours**.
-   - Sur Windows : installer Docker Desktop + WSL2. Utilisez *PowerShell* ou *Windows Terminal*, pas CMD.  *Git Bash* est aussi possible, mais déconseillé. **Normalement déjà fait pour vos autres cours**.
+L’objectif principal est de **concevoir et implémenter une base de données relationnelle complète pour la gestion d’une compagnie aérienne**, en appliquant les bonnes pratiques de modélisation SQL :
 
-2. Téléchargez le fichier `cours-bd-MASRAD-docker.zip` joint à ce message ou sur la page web du cours et décompressez-le.
+* création de schémas relationnels
+* définition des clés primaires et étrangères
+* contraintes d’intégrité (`CHECK`, `NOT NULL`, etc.)
+* organisation logique des données
+* insertion et interrogation des données via SQL
 
-3. Dans un terminal, allez dans le répertoire:
+Le projet est exécuté avec **PostgreSQL dans Docker**, ce qui permet de lancer rapidement un environnement prêt à l’emploi.
 
-   ```bash
-   cd cours-bd-MASRAD-docker
-   ```
+---
 
-4. - Ouvrez le ficher `docker-compose.yml` et observez les lignes 19 - 23. 
+## ✈️ Sujet traité : Gestion d’une compagnie aérienne
 
-     ```yaml
-     # Répertoire local où nous mettrons les fichers .sql. Ajustez en fonction de vos besoins.
-     # Windows
-     # - C:/Users/chris/Documents/MAS-RAD/cours/cas_daw/cas-daw-Base-Donnee/Exercices-20251201:/sqlfiles
-     # macOS / linux
-     # - /Users/huguesm/Documents/cours/MASRAD-IBD-BDA/2025-2026/exercices:/sqlfiles
-     ```
+La base de données modélise plusieurs entités métier liées au transport aérien, notamment :
 
-   - Choisissez un répertoire local sur votre ordinateur où nous pourrons déposer des fichiers .sql pendant le cours.
+* aéroports
+* vols et segments de vols
+* avions et configurations
+* passagers
+* réservations
+* classes tarifaires
+* relations entre trajets, clients et vols
 
-   - Sur Windows, décommentez la ligne 21 et ajustez le chemin vers le répertoire choisi (avant :/sqlfiles).
+Le script principal du projet crée notamment un schéma nommé :
 
-   - Sur macOS / linux, décommentez la ligne 23 et ajustez le chemin vers le répertoire choisi (avant :/sqlfiles).
+```sql
+airline
+```
 
-   - Sauvegardez le fichier.
+---
 
-5. Lancez le conteneur:
+## 🛠️ Technologies utilisées
 
-    ```bash
-    docker compose up
-    ```
+* PostgreSQL
+* Docker Desktop
+* PowerShell
+* SQL (DDL / DML)
 
-6. Dans un autre terminal, démarrez psql :
+---
 
-    ```bash
-    docker exec -it cours-bd-masrad psql -U etudiant -d bd_masrad
-    ```
+## 📁 Structure du projet
 
-    Vous devriez voir apparaître :
+```text
+SQL/
+│── Docker/
+│   │── docker-compose.yml
+│   │── BD/
+│   │   └── Dolci_TP_BD_airline.sql
+│
+│── README.md
+```
 
-    ```bash
-    bd_masrad=#
-    ```
+---
 
-    Note: Si vous utilisez Git Bash, vous devrez probablement démarrer psql avec
+## 🚀 Lancer le projet
 
-    ```bash
-    winpty docker exec -it cours-bd-masrad psql -U etudiant -d bd_masrad
-    ```
+## 1. Se placer dans le dossier Docker
 
-7. Faites un test et entrez votre première requête SQL sur le terminal: 
+```powershell
+cd SQL\Docker
+```
 
-    ```sql
-    SET SEARCH_PATH TO IBD_schema_test;
-    SELECT * FROM items;
-    ```
+---
 
-    Vous devriez obtenir :
+## 2. Démarrer Docker
 
-    ```sql
-    1 | un premier item quelconque | 2025-11-13 14:58:15.769714+00
-    ```
+Lancer Docker Desktop.
 
-8. Pour insérer un fichier .sql, par exemple, `IBD-Exercice-1-data.sql`, vous pouvez le déposer dans votre répertoire choisi à l'étape 4. et exécuter
+---
 
-   ```sql
-   \i /sqlfiles/IBD-Exercice-1-data.sql
-   ```
+## 3. Lancer PostgreSQL
 
-9. Faites un dernier test et entrez votre deuxième requête SQL sur le terminal: 
+Dans un premier terminal :
 
-   ```sql
-   SELECT * FROM customer;
-   ```
+```powershell
+docker compose up
+```
 
-   Le résultat devrait être une grosse table de clients. Si c'est le cas, vous pouvez faire l'exercice 1.
+---
 
-Le conteneur Docker contient également pgadmin (https://www.pgadmin.org), un GUI pour PostgreSQL, accessible à http://localhost:8080 dans votre navigateur une fois le conteneur en opération. Prenez note que je n'utiliserai pas pgadmin pendant le cours, mais que certains d'entre vous le trouverons peut-être utile.
+## 4. Ouvrir PostgreSQL
 
-Vous pouvez me contacter à hugues.mercier@he-arc.ch. Bonne préparation!  
+Dans un second terminal :
 
-# DB_PostgreSQL_Modelisation_Airline
+```powershell
+docker exec -it cours-bd-masrad psql -U etudiant -d bd_masrad
+```
+
+---
+
+## 5. Exécuter le script principal du projet
+
+Dans PostgreSQL :
+
+```sql
+\i /sqlfiles/Dolci_TP_BD_airline.sql
+```
+
+Ce script :
+
+* supprime puis recrée le schéma `airline`
+* crée les tables
+* ajoute les contraintes
+* prépare la base pour les requêtes
+
+---
+
+## 🧪 Exemple de requêtes utiles
+
+Lister les tables :
+
+```sql
+\dt airline.*
+```
+
+Changer de schéma :
+
+```sql
+SET search_path TO airline;
+```
+
+Afficher les passagers :
+
+```sql
+SELECT * FROM passager;
+```
+
+---
+
+## 🛑 Arrêter le projet
+
+```powershell
+docker compose down
+```
+
+---
+
+## 📚 Objectifs pédagogiques du projet
+
+Ce travail démontre la maîtrise des notions suivantes :
+
+* modélisation relationnelle
+* normalisation des données
+* intégrité référentielle
+* création de structures SQL robustes
+* manipulation de PostgreSQL
+* utilisation de Docker pour l’environnement de développement
+
+---
+
+## 👨‍💻 Auteur
+
+Projet réalisé par **Marco Dolci** dans le cadre du cursus **MAS-RAD / CAS-DAW**.
